@@ -1,6 +1,8 @@
 package br.com.caelum.contas.modelo;
 
-public class Conta {
+import br.com.caelum.contas.exceptions.SaldoInsuficienteException;
+
+public abstract class Conta {
 
     private String titular;
     private static int idConta;
@@ -20,46 +22,74 @@ public class Conta {
         criarIdConta();
     }
 
-    private static void criarIdConta(){
+    private static void criarIdConta() {
         idConta++;
     }
 
 
     /**
      * Metodo que incrementa o saldo
+     *
      * @param quantia
      * @return
      */
-    public boolean sacar(double quantia) {
+    public void saca(double quantia) {
         if (this.saldo >= quantia) {
             this.saldo -= quantia;
-            return true;
+        } else {
+            throw new SaldoInsuficienteException("Saldo insuficiente, " + "Tente um valor menor.");
         }
-        return false;
     }
 
     /**
      * Metodo que faz o deposito
+     *
      * @param quantia a ser depositada
      * @return se deu certo o deposito
      */
-    public boolean deposito(double quantia) {
-        if (quantia <= 0) return false;
-        this.saldo += quantia;
+    public void deposito(double quantia) {
+        if (quantia <= 0) {
+            throw new SaldoInsuficienteException("Quantia inválida, " + "Tente um valor positivo.");
+        } else {
+            this.saldo += quantia;
+        }
+    }
+
+    public boolean transfere(double quantia, Conta destinatario) {
+        destinatario.deposito(quantia);
+        this.saca(quantia);
         return true;
     }
 
+    public abstract String getTipo();
+
     public String recuperaDadosParaImpressao() {
-        return "\nTitular: " + this.titular +
-                "\nIdentificador: " +  idConta+
-                "\nSaldo: " + this.saldo +
-                "\nAno: " + dataAbertura.ano +
-                "\nMês: " + dataAbertura.mes +
-                "\nDia: " + dataAbertura.dia;
+        String dados = "Titular: " + this.titular;
+        dados += "\nNúmero: " + this.numero;
+        dados += "\nAgência: " + this.agencia;
+        dados += "\nSaldo: R$" + this.saldo;
+        dados += "\nTipo: " + this.getTipo();
+        return dados;
     }
 
     public String getTitular() {
         return titular;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        Conta outraConta = (Conta) obj;
+
+        return this.numero == outraConta.numero && this.agencia.equals(outraConta.agencia);
+    }
+
+    @Override
+    public String toString() {
+        return "[titular=" + titular.toUpperCase() + ", numero=" + numero + ", agencia=" + agencia + "]";
     }
 
     public static int getIdConta() {
