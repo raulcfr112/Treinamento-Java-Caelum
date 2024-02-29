@@ -50,7 +50,7 @@ public abstract class Conta implements Comparable<Conta>{
      * @return se deu certo o deposito
      */
     public void deposito(double quantia) {
-        if (quantia <= 0) {
+        if (quantia < 0) {
             throw new SaldoInsuficienteException("Quantia inválida, " + "Tente um valor positivo.");
         } else {
             this.saldo += quantia;

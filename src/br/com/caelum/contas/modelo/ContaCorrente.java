@@ -7,6 +7,15 @@ public class ContaCorrente extends Conta implements Tributavel {
         super.saca(quantia + taxa);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Conta){
+            if (this.getTitular() == ((Conta) obj).getTitular() && this.getNumero() == ((Conta) obj).getNumero()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public String getTipo() {
         return "Conta Corrente";

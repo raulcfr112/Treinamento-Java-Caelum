@@ -7,6 +7,7 @@ public class DesafiosAvancadosCollections {
         TreeSet teste = new TreeSet();
         List<Integer> testeArray = new ArrayList<>();
         Random random = new Random();
+        Scanner n = new Scanner(System.in);
 
         for (int i = 0; i < 1000; i++) {
             teste.add(random.nextInt(1000));
